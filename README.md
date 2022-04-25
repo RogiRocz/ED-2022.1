@@ -4,4 +4,4 @@
 * Aluno: Ygor Bezerra Cruz
 * Matricula: 498920
 * Curso: Sistemas de informação
-* Horário da disciplina: seg: 8 - 10 am; qua: 10 - 12 am
+* Horário da disciplina: seg: 10 - 12 am; qua: 10 - 12 am
