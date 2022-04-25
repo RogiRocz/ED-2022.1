@@ -1,5 +1,5 @@
 # ED-2022.1
-##Repositório da disciplina de Estrutura de dados
+## Repositório da disciplina de Estrutura de dados
 
 * Aluno: Ygor Bezerra Cruz
 * Matricula: 498920
