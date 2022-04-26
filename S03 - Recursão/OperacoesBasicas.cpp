@@ -36,9 +36,9 @@ string exibirVet(vector<int> vet)
 vector<int> rvet(vector<int> vet)
 {
     vector<int> vetInvertido;
-    for (size_t i = vet.size() - 1; i >= 0; i--)
+    for (size_t i = vet.size(); i > 0; i--)
     {
-        vetInvertido.push_back(vet[i]);
+        vetInvertido.push_back(vet[i - 1]);
     }
 
     return vetInvertido;
@@ -57,7 +57,7 @@ int sum(vector<int> vet)
 
 int mult(vector<int> vet)
 {
-    int mult{0};
+    int mult{1};
     for (size_t i = 0; i < vet.size(); i++)
     {
         mult *= vet[i];
