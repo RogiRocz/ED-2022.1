@@ -33,13 +33,41 @@ string exibirVet(vector<int> vet)
     return ss.str();
 }
 
+/* vector<int> rvet2(vector<int> vet, vector<int>::iterator begin, vector<int>::iterator end)
+{
+    // [1,2,3,4]
+    if (begin == end)
+    {
+        return vector<int>{*end}; // [1]
+    }
+    // Gabriel tua voz cortou
+
+    // [1,2,3] -> [3.2,1]
+    vector<int> result = rvet2(begin, end - 1);
+
+    // [4,3,2,1]
+    result.insert(begin, *end);
+
+    // [4,3,2,1]
+    return result;
+} */
+
 vector<int> rvet(vector<int> vet)
 {
-    vector<int> vetInvertido;
-    for (size_t i = vet.size() - 1; i >= 0; i--)
+    // [1, 2]
+    if (vet.size() == 1)
     {
-        vetInvertido.push_back(vet[i]);
+        return vector<int>{vet[0]};
     }
+
+    auto it = vet.begin();
+    vector<int> vetInvertido = rvet(it);
+
+    auto last = vet.back();
+    vet.pop_back();
+    vet.insert(vet.begin(), last);
+
+    vetInvertido.push_back(vet);
 
     return vetInvertido;
 }
