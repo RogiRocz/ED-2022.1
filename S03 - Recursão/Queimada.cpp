@@ -1,15 +1,25 @@
 #include <iostream>
+#include <sstream>
 #include <vector>
 
-int main(int argc, char *argv[])
-{
-    int nl = argv[1], nc = argv[2], lFogo = argv[3], cFogo = argv[4];
+using namespace std;
 
-    cout << nl << ' ';
-    cout << nc << ' ';
-    cout << lFogo << '';
-    cout << cFogo;
-    cout << endl;
+vector<int> produzirMapa(int nc){
+    
+}
 
+int main(){
+    string entrada = "2 3 1 1";
+    stringstream ss(entrada);
+    
+    int nl, nc, l, c;
+    ss >> nl >> nc >> l >> c;
+    
+    vector<vector<int>> vet;
+    for(int i = 0; i < nl; i++){
+        vet[i].push_back(produzirMapa(nc));
+    }
+    
+    
     return 0;
 }
