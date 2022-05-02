@@ -54,40 +54,32 @@ string exibirVet(vector<int> vet)
 
 vector<int> rvet(vector<int> vet)
 {
-<<<<<<< HEAD
-    // [1, 2]
     if (vet.size() == 1)
     {
-        return vector<int>{vet[0]};
-=======
-    vector<int> vetInvertido;
-    for (size_t i = vet.size(); i > 0; i--)
-    {
-        vetInvertido.push_back(vet[i - 1]);
->>>>>>> 6433ead99435969001ae44e5c8e20587719b8565
+        return vet;
     }
 
-    auto it = vet.begin();
-    vector<int> vetInvertido = rvet(it);
-
-    auto last = vet.back();
-    vet.pop_back();
-    vet.insert(vet.begin(), last);
-
-    vetInvertido.push_back(vet);
+    int first = vet.front();
+    vet.erase(vet.begin());
+    vector<int> vetInvertido = rvet(vet);
+    vetInvertido.push_back(first);
 
     return vetInvertido;
 }
 
 int sum(vector<int> vet)
 {
-    int sum{0};
-    for (size_t i = 0; i < vet.size(); i++)
+    if (vet.size() == 1)
     {
-        sum += vet[i];
+        return vet.front();
     }
 
-    return sum;
+    int soma{0};
+    auto it = vet.begin();
+    soma += sum({*it + 1}) + vet.front();
+
+    cout << "Debug: " << exibirVet(vet + 1) << endl;
+    return soma;
 }
 
 int mult(vector<int> vet)
