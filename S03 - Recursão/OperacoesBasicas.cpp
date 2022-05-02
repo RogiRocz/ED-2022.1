@@ -33,25 +33,6 @@ string exibirVet(vector<int> vet)
     return ss.str();
 }
 
-/* vector<int> rvet2(vector<int> vet, vector<int>::iterator begin, vector<int>::iterator end)
-{
-    // [1,2,3,4]
-    if (begin == end)
-    {
-        return vector<int>{*end}; // [1]
-    }
-    // Gabriel tua voz cortou
-
-    // [1,2,3] -> [3.2,1]
-    vector<int> result = rvet2(begin, end - 1);
-
-    // [4,3,2,1]
-    result.insert(begin, *end);
-
-    // [4,3,2,1]
-    return result;
-} */
-
 vector<int> rvet(vector<int> vet)
 {
     if (vet.size() == 1)
@@ -74,33 +55,42 @@ int sum(vector<int> vet)
         return vet.front();
     }
 
-    int soma{0};
-    // auto it = vet.begin();
-    soma += sum(vet + 1) + vet.front();
+    int result{0};
+    int first = vet.front();
+    vet.erase(vet.begin());
+    result += sum(vet) + first;
 
-    return soma;
+    return result;
 }
 
 int mult(vector<int> vet)
 {
-    int mult{1};
-    for (size_t i = 0; i < vet.size(); i++)
+    int result{1};
+    if (vet.size() == 1)
     {
-        mult *= vet[i];
+        return vet.front();
     }
+    
+    int first = vet.front();
+    vet.erase(vet.begin());
+    result *= first * mult(vet);
 
-    return mult;
+    return result;
 }
 
-int min(vector<int> vet)
+int menor(vector<int> vet)
 {
-    int minValue = vet[0];
-    for (size_t i = 0; i < vet.size(); i++)
+    int minus {0};
+    if (vet.size() == 1)
     {
-        minValue = min(minValue, vet[i]);
+        return vet.front();
     }
 
-    return minValue;
+    int first = vet.front();
+    vet.erase(vet.begin());
+    minus = min(first, menor(vet));
+
+    return minus;
 }
 
 vector<int> inv(vector<int> vet)
@@ -114,7 +104,7 @@ void saida(const vector<int> &vet)
     cout << "rvet: " << exibirVet(rvet(vet)) << endl;
     cout << "sum: " << sum(vet) << endl;
     cout << "mult: " << mult(vet) << endl;
-    cout << "min: " << min(vet) << endl;
+    cout << "min: " << menor(vet) << endl;
     cout << "inv: " << exibirVet(inv(vet)) << endl;
 }
 
