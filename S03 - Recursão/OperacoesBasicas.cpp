@@ -75,10 +75,9 @@ int sum(vector<int> vet)
     }
 
     int soma{0};
-    auto it = vet.begin();
-    soma += sum({*it + 1}) + vet.front();
+    // auto it = vet.begin();
+    soma += sum(vet + 1) + vet.front();
 
-    cout << "Debug: " << exibirVet(vet + 1) << endl;
     return soma;
 }
 
