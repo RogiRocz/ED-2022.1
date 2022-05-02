@@ -7,30 +7,33 @@
 enum Tipo_terreno{
     ARVORE,
     VAZIO,
-    QUEIMADO
 };
+
+// enum Tipo_terreno{
+//     ARVORE,
+//     VAZIO,
+//     QUEIMADO
+// };
 
 using namespace std;
 
-vector<char> produzirMapa(int nc){
-    srand(time(NULL));
+vector<char> produzirMapa(int nc, int dif){
+    srand(time(NULL) + dif);
     vector<char> coluna(nc);
     for (auto &elem : coluna)
     {
-        int numRandomico = rand() % 3;
+        int numRandomico = rand() % 2;
         Tipo_terreno tipo = (Tipo_terreno)numRandomico;
-        switch (numRandomico)
+        switch (tipo)
         {
-        case 0:
+        case ARVORE:
             elem = '#';
             break;
-        case 1:
+        case VAZIO:
             elem = '.';
             break;
-            case 2:
-            elem = 'o';
-            break;
         default:
+            elem = '^';
             break;
         }
         // cout << "Tipo: " << (char)tipo << endl;
@@ -44,7 +47,7 @@ vector<char> produzirMapa(int nc){
 }
 
 int main(){
-    string entrada = "2 3 1 1";
+    string entrada = "5 5 1 1";
     stringstream ss(entrada);
     
     int nl, nc, l, c;
@@ -52,9 +55,9 @@ int main(){
     
     
     vector<vector<char>> vet(nl);
-    for (auto it = vet.begin(); it != vet.end(); it++)
+    for (int i = 0; i < nc; i++)
     {
-        *it = produzirMapa(nc);
+        vet[i] = produzirMapa(nc, i);
     }
     
     for (auto row : vet)
