@@ -81,15 +81,19 @@ void queimar(vector<string> &vet, Ponto p)
     queimar(vet, Ponto(l - 1, c));
     queimar(vet, Ponto(l, c + 1));
     queimar(vet, Ponto(l + 1, c));
+
+    vet[l][c] = '+';
+    exibirMatriz(vet);
 }
 
 int main()
 {
-    string entrada = "5 5 0 0";
-    stringstream ss(entrada);
+    string linha;
+    getline(cin, linha);
+    stringstream ss(linha);
 
-    int nl, nc, l, c;
-    ss >> nl >> nc >> l >> c;
+    int nl = 1, nc = 1, l = 0, c = 0;
+    ss >> nl >> nc;
 
     vector<string> vet(nl);
     for (int i = 0; i < nc; i++)
