@@ -4,73 +4,111 @@
 #include <time.h>
 #include <algorithm>
 
-enum Tipo_terreno{
+enum Tipo_terreno
+{
     ARVORE,
     VAZIO,
 };
 
-// enum Tipo_terreno{
-//     ARVORE,
-//     VAZIO,
-//     QUEIMADO
-// };
+struct Ponto
+{
+    int l;
+    int c;
+    Ponto(int l, int c) : l(l), c(c) {}
+    // this->l = l;
+    // this->c = c;
+};
 
 using namespace std;
 
-vector<char> produzirMapa(int nc, int dif){
+string produzirMapa(int nc, int dif)
+{
     srand(time(NULL) + dif);
-    vector<char> coluna(nc);
-    for (auto &elem : coluna)
+    string coluna(nc, ' ');
+    for (auto &letra : coluna)
     {
         int numRandomico = rand() % 2;
-        Tipo_terreno tipo = (Tipo_terreno)numRandomico;
-        switch (tipo)
+        switch (numRandomico)
         {
         case ARVORE:
-            elem = '#';
+            letra = '#';
             break;
         case VAZIO:
-            elem = '.';
+            letra = '.';
             break;
         default:
-            elem = '^';
+            letra = '^';
             break;
         }
-        // cout << "Tipo: " << (char)tipo << endl;
-        // elem = tipo;
     }
-    
-
-    // random_shuffle(coluna.begin(), coluna.end());
 
     return coluna;
 }
 
-int main(){
-    string entrada = "5 5 1 1";
+void exibirMatriz(vector<string> vet)
+{
+    for (auto row : vet)
+    {
+        for (auto letra : row)
+        {
+            cout << letra << ' ';
+        }
+        cout << endl;
+    }
+    getchar();
+}
+
+void queimar(vector<string> &vet, Ponto p)
+{
+    // cout << p.l << ' ' << p.c << endl;
+    int l = p.l;
+    int c = p.c;
+
+    if (l < 0 || l >= vet.size() || c < 0 || c >= vet[0].size())
+    {
+        return;
+    }
+
+    if (vet[l][c] != '#')
+    {
+        return;
+    }
+
+    vet[l][c] = 'o';
+    exibirMatriz(vet);
+
+    queimar(vet, Ponto(l, c - 1));
+    queimar(vet, Ponto(l - 1, c));
+    queimar(vet, Ponto(l, c + 1));
+    queimar(vet, Ponto(l + 1, c));
+}
+
+int main()
+{
+    string entrada = "5 5 0 0";
     stringstream ss(entrada);
-    
+
     int nl, nc, l, c;
     ss >> nl >> nc >> l >> c;
-    
-    
-    vector<vector<char>> vet(nl);
+
+    vector<string> vet(nl);
     for (int i = 0; i < nc; i++)
     {
         vet[i] = produzirMapa(nc, i);
     }
-    
+
     for (auto row : vet)
     {
-        for (auto col : row)
+        for (auto letra : row)
         {
-            cout << col << ' ';
+            cout << letra << ' ';
         }
-        cout << endl;        
+        cout << endl;
     }
-    
-    
-    
-    
+
+    cout << endl;
+
+    queimar(vet, Ponto(l, c));
+
     return 0;
 }
