@@ -3,23 +3,49 @@
 
 using namespace std;
 
-void exibirVet(vector<int> vet);
-
-int trianguloSoma(vector<int>& vet){
-    if(vet.size() == 1){
-        exibirVet(vet);
-        return vet[0];
+void exibirVet(vector<int> vet)
+{
+    cout << "[ ";
+    for (size_t i = 0; i < vet.size(); i++)
+    {
+        cout << vet[i] << ' ';
     }
-    auto it = vet.begin();
-    int soma = *it + *(it + 1);
-    it = vet.erase(it);
-    //vet.insert(it, soma);
-    trianguloSoma(vet);
+    cout << "]" << endl;
 }
 
-int main() {
-    vector<int> vet = {1, 2, 3}
-    trianguloSoma(vet);
+vector<int> somaValores(vector<int> vet)
+{
+    auto result = [vet]()
+    {
+        vector<int> aux;
+        for (size_t i = 0; i < vet.size() - 1; i++)
+        {
+            aux.push_back(vet[i] + vet[i + 1]);
+        }
+        return aux;
+    };
 
+    return result();
+}
+
+void trianguloSoma(vector<int> vet)
+{
+    // somar(vet);
+    if (vet.size() == 1)
+    {
+        return;
+    }
+
+    vector<int> vetSomado = somaValores(vet);
+    trianguloSoma(vetSomado);
+    exibirVet(vetSomado);
+}
+
+int main()
+{
+    vector<int> vet = {1, 2, 4, 8, 16, 32, 64};
+
+    trianguloSoma(vet);
+    exibirVet(vet);
     return 0;
 }
