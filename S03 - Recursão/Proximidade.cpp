@@ -25,6 +25,7 @@ void verificarPos(string dados, int pos, int prox)
 
 void saida(string dados, int prox)
 {
+    // Tem que passar os valores testes pra verificar
     int posBlank = [dados]()
     {
         for (size_t i = 0; i < dados.size(); i++)
@@ -36,6 +37,8 @@ void saida(string dados, int prox)
         }
         return -1;
     };
+
+    // Verificar se tem repetido proximo
     verificarAnt(dados, posBlank(), prox);
     verificarPos(dados, posBlank(), prox);
 }
