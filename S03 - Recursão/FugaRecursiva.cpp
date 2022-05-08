@@ -46,56 +46,63 @@ Ponto posFinal(vector<string> vet)
     }
 }
 
-void procurarCaminho(vector<string> &vet, Ponto inicio, Ponto fim)
+vector<Ponto> get_vizinhos(Ponto p)
 {
-    int l = inicio.l;
-    int c = inicio.c;
-    if (l < 0 && l >= vet.size() || c < 0 && c >= vet[0].size())
+    return {{p.l, p.c - 1}, {p.l - 1, p.c}, {p.l, p.c + 1}, {p.l + 1, p.c}};
+}
+
+bool procurarCaminho(vector<string> &vet, Ponto atual, Ponto destino)
+{
+    int l = atual.l;
+    int c = atual.c;
+
+    if (l == destino.l && c == destino.c)
     {
-        return;
+        vet[l][c] = '.';
+        return true;
     }
 
     if (vet[l][c] != '_')
     {
-        return;
+        return false;
     }
 
-    if (l == fim.l && c == fim.c)
-    {
-        vet[l][c] = '.';
-        return;
-    }
-    vet[l][c] = '*';
-    procurarCaminho(vet, Ponto(l, c - 1), fim);
-    procurarCaminho(vet, Ponto(l - 1, c), fim);
-    procurarCaminho(vet, Ponto(l, c + 1), fim);
-    procurarCaminho(vet, Ponto(l + 1, c), fim);
     vet[l][c] = '.';
+    for (auto viz : get_vizinhos(atual))
+    {
+        if (procurarCaminho(vet, viz, destino))
+        {
+            return true;
+        }
+    }
+
+    vet[l][c] = '_';
+    return false;
 }
 
-void fugir(vector<string> vet)
+void fugir(vector<string> &vet)
 {
-    auto inicio = posInicial(vet);
-    auto fim = posFinal(vet);
+    Ponto inicio = posInicial(vet);
+    Ponto fim = posFinal(vet);
 
     vet[inicio.l][inicio.c] = '_';
     vet[fim.l][fim.c] = '_';
 
     procurarCaminho(vet, inicio, fim);
-    exibirVet(vet);
 }
 
 int main()
 {
-    ifstream ifs("./Entrada.txt", ifstream::in);
+    ifstream arq("./Entrada.txt", ifstream::in);
     int nl, nc;
-    ifs >> nl >> nc;
+    arq >> nl >> nc;
     vector<string> vet;
-    if (ifs.good())
+    if (arq.good())
     {
-        ifs.seekg((int)ifs.tellg() + 1);
+        string prox;
+        getline(arq, prox);
         string line;
-        while (getline(ifs, line))
+        while (getline(arq, line))
         {
             // cout << line << endl;
             vet.push_back(line);
@@ -103,8 +110,8 @@ int main()
     }
 
     fugir(vet);
-    // exibirVet(vet);
+    exibirVet(vet);
 
-    ifs.close();
+    arq.close();
     return 0;
 }
