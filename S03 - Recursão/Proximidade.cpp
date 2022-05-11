@@ -4,31 +4,50 @@ using namespace std;
 
 void exibir(string dados)
 {
-    cout << dados << endl;
+    cout << dados;
 }
 
-void verificarAnt(string dados, int pos, int prox)
+bool verificarAnt(string dados, int prox, int pos, int value)
 {
-    if (pos < 0 || pos >= dados.size())
+    cout << "ANT" << endl;
+    cout << "Dados: " << dados << " Prox :" << prox << " Pos: " << pos << " Value: " << value << endl;
+    
+    if (pos < 0 || prox == 0)
     {
-        return;
+        return 1;
     }
 
-    if (dados.front() ==)
+    if (dados[pos] == (value + '0'))
     {
+        return 0;
     }
+    
+    return 1 * verificarAnt(dados, prox - 1, pos - 1, value);
 }
 
-void verificarPos(string dados, int pos, int prox)
-{
+int verificarPos(string dados, int prox, int pos, int value)
+{   
+    cout << "POS" << endl;
+    cout << "Dados: " << dados << " Prox :" << prox << " Pos: " << pos << " Value: " << value << endl;
+    
+    if(pos >= dados.size() || prox == 0)
+    {
+        return 1;
+    }
+    
+    if(dados[pos] == (value + '0'))
+    {
+        return 0;
+    }
+    
+    return 1 * verificarPos(dados, prox - 1, pos + 1, value);
 }
 
 void saida(string dados, int prox)
 {
-    // Tem que passar os valores testes pra verificar
-    int posBlank = [dados]()
+    auto posVazia = [](string dados)
     {
-        for (size_t i = 0; i < dados.size(); i++)
+        for (int i = 0; i < (int)dados.size(); i++)
         {
             if (dados[i] == '_')
             {
@@ -37,19 +56,31 @@ void saida(string dados, int prox)
         }
         return -1;
     };
+    
+    int pos = posVazia(dados);
 
-    // Verificar se tem repetido proximo
-    verificarAnt(dados, posBlank(), prox);
-    verificarPos(dados, posBlank(), prox);
+    while(pos != -1){
+        for(int i = 0; i <= prox; i++){
+            if(verificarAnt(dados, prox, pos, i) && verificarPos(dados, prox, pos, i))
+            {
+                dados[pos] = i + '0';
+                
+            }
+        }
+        cout << "------------------------" << endl;
+        pos = posVazia(dados);
+    }
+    exibir(dados);
 }
 
 int main(int argc, char const *argv[])
 {
-    char dados[100] = "01_2_";
-    int prox = 3;
+    char dados[100];
+    int prox;
 
-    // gets(dados);
-    // cin >> prox;
+    fgets(dados, 100, stdin);
+    cin >> prox;
+    
     if (!(prox > 0 && prox < 100))
     {
         cerr << "Proximidade so aceita valores de 1 ate 99";
@@ -57,7 +88,6 @@ int main(int argc, char const *argv[])
     }
 
     saida(dados, prox);
-    // cout << "Dados: " << dados << " Prox: " << prox;
 
     return 0;
 }
