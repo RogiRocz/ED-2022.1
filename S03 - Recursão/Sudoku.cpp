@@ -4,6 +4,12 @@
 
 using namespace std;
 
+struct Pos{
+    int l, c;
+    
+    Pos(int l, int c) : l(l), c(c){}
+};
+
 void exibir(vector<vector<int>> vet){
     for(auto row : vet){
         for(auto col : row){
@@ -27,8 +33,15 @@ void entrada(vector<vector<int>>& vet, int n){
         }
         j = 0;
     }
-    
-    
+}
+
+void resolver(vector<vector<int>> vet){
+    auto posVazia = [](vector<vector<int>>){
+        for(int i = 0){
+            if(elem == 0)
+                return 
+        }
+    };
 }
 
 int main() {
@@ -48,6 +61,8 @@ int main() {
     
     // Fazer entrada para arquivo txt
     entrada(vet, n);
+    
+    resolver(vet);
     
     exibir(vet);
 
