@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -21,14 +22,14 @@ void exibir(matInt vet){
     }
 }
 
-void entrada(vector<vector<int>>& vet, int n){
+void entrada(vector<vector<int>>& vet, fstream arq){
     string aux;
     int j = 0;
-    for(int i = 0; i < n; i++){
-        getline(cin, aux);
+    for(int i = 0; i < vet.size(); i++){
+        getline(arq, aux);
         for(auto elem : aux){
             int num = elem - '0';
-            if(num > 0 && num <= n){
+            if(num > 0 && num <= (int)vet.size()){
                 vet[i][j] = num;
             }
             j++;
@@ -150,8 +151,9 @@ int main() {
     size_t s;
     int n;
     
-    getline(cin, aux);
-    n = stoi(aux, &s);
+  	fstream arq("dadosSudoku.txt", fstream::in);
+		getline(arq, aux);
+		n = stoi(aux, &s);
     
     if(n != 4 && n != 9){
         cerr << "So trabalhamos com sudoku 4 x 4 ou 9 x 9";
@@ -161,11 +163,12 @@ int main() {
     vector<vector<int>> vet(n, vector<int>(n, 0));
     
     // Fazer entrada para arquivo txt
-    entrada(vet, n);
+    entrada(vet, arq);
     
     resolver(vet);
     
     exibir(vet);
 
+		arq.close();
     return 0;
 }

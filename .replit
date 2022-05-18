@@ -1,0 +1,2 @@
+language = "c++"
+run = "g++ -o S03 - Recursão/FugaRecursiva S03 - Recursão/FugaRecursiva.cpp"
