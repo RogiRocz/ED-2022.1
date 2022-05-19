@@ -93,7 +93,7 @@ void fugir(vector<string> &vet)
 
 int main()
 {
-    ifstream arq("./Entrada.txt", ifstream::in);
+    ifstream arq("./dadosFugaRecursiva.txt", ifstream::in);
     int nl, nc;
     arq >> nl >> nc;
     vector<string> vet;
