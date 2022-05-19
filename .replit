@@ -1,2 +1,3 @@
-language = "c++"
-run = "g++ -o S03 - Recursão/FugaRecursiva S03 - Recursão/FugaRecursiva.cpp"
+language = "cpp"
+compile = "g++ -o 'S03 - Recursão'/Sudoku 'S03 - Recursão'/Sudoku.cpp"
+run = "cd 'S03 - Recursão'/ && ./Sudoku"
