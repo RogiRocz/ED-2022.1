@@ -116,8 +116,6 @@ bool resolver(matInt &vet, int i = 1) {
 	if (verificarLinha(vet, l, i) && verificarColuna(vet, c, i) &&
 		verificarQuadrante(vet, pos, i)) {
 		vet[l][c] = i;
-		exibir(vet);
-		cout << endl;
 		if(resolver(vet) == false){
 			vet[l][c] = 0;
 			return resolver(vet, ++i);		
@@ -145,6 +143,9 @@ int main() {
 
 	// Fazer entrada para arquivo txt
 	entrada(vet, arq);
+
+	exibir(vet);
+	cout << endl;
 
 	resolver(vet);
 
