@@ -40,37 +40,23 @@ void entrada(matInt &vet, fstream &arq) {
 }
 
 bool verificarLinha(matInt vet, int row, int value, int limQua = 0) {
-	if (limQua == 0) {
+	
 		for (int i = 0; i < (int)vet.size(); i++) {
 			if (vet[row][i] == value) {
 				return false;
 			}
 		}
-	} else {
-		for (int i = 0; i < limQua; i++) {
-			if (vet[row][i] == value) {
-				return false;
-			}
-		}
-	}
 
 	return true;
 }
 
 bool verificarColuna(matInt vet, int col, int value, int limQua = 0) {
-	if (limQua == 0) {
+	
 		for (int i = 0; i < (int)vet.size(); i++) {
 			if (vet[i][col] == value) {
 				return false;
 			}
 		}
-	} else {
-		for (int i = 0; i < limQua; i++) {
-			if (vet[i][col] == value) {
-				return false;
-			}
-		}
-	}
 
 	return true;
 }
@@ -78,21 +64,23 @@ bool verificarColuna(matInt vet, int col, int value, int limQua = 0) {
 bool verificarQuadrante(matInt vet, Pos pos, int value) {
 	if (vet.size() == 4) {
 		auto inicioQua = Pos((pos.l / 2) * 2, (pos.c / 2) * 2);
-		for (int i = 0; i < 2; i++) {
-			if (!(verificarLinha(vet, inicioQua.l + i, value, 2) &&
-				  verificarColuna(vet, inicioQua.c + i, value, 2))) {
-				return false;
-			}
+		for (int i = inicioQua.l; i < 2; i++) {
+			for(int j = inicioQua.c; j < 2; j++){
+                if(vet[i][j] == value){
+                    return false;
+                }
+            }
 		}
 
 		return true;
 	} else {
 		auto inicioQua = Pos((pos.l / 3) * 3, (pos.c / 3) * 3);
-		for (int i = 0; i < 3; i++) {
-			if (!(verificarLinha(vet, inicioQua.l + i, value, 3) &&
-				  verificarColuna(vet, inicioQua.c + i, value, 3))) {
-				return false;
-			}
+		for (int i = inicioQua.l; i < 3; i++) {
+			for(int j = inicioQua.c; j < 3; j++){
+                if(vet[i][j] == value){
+                    return false;
+                }
+            }
 		}
 
 		return true;
@@ -124,17 +112,19 @@ bool resolver(matInt &vet, int i = 1) {
 	if (i > vet.size()) {
 		return false;
 	}
-
-	cout << "i :" << i << " l: " << l << " c: " << c << endl;
+	
 	if (verificarLinha(vet, l, i) && verificarColuna(vet, c, i) &&
 		verificarQuadrante(vet, pos, i)) {
 		vet[l][c] = i;
 		exibir(vet);
 		cout << endl;
-		return resolver(vet);
+		if(resolver(vet) == false){
+			vet[l][c] = 0;
+			return resolver(vet, ++i);		
+		}
 	}
-
-	resolver(vet, ++i);
+	
+	return resolver(vet, ++i);
 }
 
 int main() {
@@ -155,9 +145,6 @@ int main() {
 
 	// Fazer entrada para arquivo txt
 	entrada(vet, arq);
-
-	exibir(vet);
-	cout << endl;
 
 	resolver(vet);
 
