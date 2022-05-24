@@ -38,14 +38,14 @@ int main(int argc, char const *argv[])
 {
     int sizeCon, sizeBus;
     string strCon, strBus;
-    vector<string> consulta, busca;
 
     cin >> sizeCon;
-
+	char* consulta[sizCon];
+	
     for (size_t i = 0; i < sizeCon; i++)
     {
-        cin >> strCon;
-        consulta.push_back(strCon);
+    	cin >> strCon;
+		consulta		
     }
 
     cin >> sizeBus;
@@ -53,10 +53,13 @@ int main(int argc, char const *argv[])
     for (size_t i = 0; i < sizeBus; i++)
     {
         cin >> strBus;
-        busca.push_back(strBus);
+        char[sizeBus] busca;
+		getline(cin, busca, strCon);
     }
 
-    cout << exibir(matchingStrings(consulta, busca)) << endl;
+	cout << consulta << endl << busca << endl;
+
+    //cout << exibir(matchingStrings(consulta, busca)) << endl;
     // cout << sizeCon << " " << exibir(con) << " " << sizeBus << " " << exibir(bus);
 
     return 0;
