@@ -87,6 +87,7 @@ int main()
         {
         case End:
             continua = false;
+			destroy(v);
             break;
         case Init:
             ss >> value;
