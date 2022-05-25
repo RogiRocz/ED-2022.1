@@ -9,16 +9,16 @@ struct Vector
     int capacity;
     int *data;
 
-    Vector(int c) : size(0), capacity(c), data == nullptr {}
+    Vector(int c) : size(0), capacity(c), data(nullptr) {}
 };
 
 string exibir(Vector *vet)
 {
     stringstream ss;
     ss << "[ ";
-    for (auto elem : *v->data)
+    for (int i = 0; i < vet->size; i++)
     {
-        ss << elem << ' ';
+        ss << vet->data[i] << ' ';
     }
     ss << "]";
     return ss.str();
@@ -26,7 +26,7 @@ string exibir(Vector *vet)
 
 Vector *create(int capacity)
 {
-    Vector v = new Vector(capacity * int);
+    Vector *v = new Vector(capacity * sizeof(int));
     return v;
 }
 
@@ -40,21 +40,27 @@ void destroy(Vector *vet)
 
 void add(Vector *vet, int value)
 {
-    if (vet != nullptr && vet->data != nullptr)
+    if (vet != nullptr)
     {
         if (vet->size + 1 > vet->capacity)
         {
-            int newCapacity = vet->capacity + int;
+            int newCapacity = vet->capacity + sizeof(int);
             auto newVector = create(newCapacity);
             newVector->size = vet->size;
             newVector->data = vet->data;
             destroy(vet);
         }
         vet->size++;
-        int newData = new int[2];
-        newData[0] = vet->data;
-        newData[1] = new int(value);
-        vet->data = newData;
+		auto newData = new int[vet->size];
+		for(int i = 0; i < vet->size - 1; i++){
+			newData[i] = vet->data[i];
+		}
+		newData[vet->size] = value;
+		vet->data = newData;
+        // int* newData = new int[2];
+        // newData[0] = vet->data;
+        // newData[1] = new int(value);
+        // vet->*data = newData;
     }
 }
 
