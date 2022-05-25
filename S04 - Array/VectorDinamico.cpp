@@ -68,10 +68,6 @@ void add(Vector *vet, int value)
 		}
 		newData[vet->size - 1] = value;
 		vet->data = newData;
-        // int* newData = new int[2];
-        // newData[0] = vet->data;
-        // newData[1] = new int(value);
-        // vet->*data = newData;
     }
 }
 
