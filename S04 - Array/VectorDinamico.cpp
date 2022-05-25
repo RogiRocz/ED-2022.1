@@ -40,7 +40,7 @@ string exibir(Vector *vet)
 
 Vector *create(int capacity)
 {
-    Vector *v = new Vector(capacity * sizeof(int));
+    Vector *v = new Vector(capacity);
     return v;
 }
 
@@ -58,18 +58,15 @@ void add(Vector *vet, int value)
     {
         if (vet->size + 1 > vet->capacity)
         {
-            int newCapacity = vet->capacity + sizeof(int);
-            auto newVector = create(newCapacity);
-            newVector->size = vet->size;
-            newVector->data = vet->data;
-            destroy(vet);
+            int newCapacity = 2 * vet->capacity;
+            vet->capacity = newCapacity;
         }
         vet->size++;
 		auto newData = new int[vet->size];
 		for(int i = 0; i < vet->size - 1; i++){
 			newData[i] = vet->data[i];
 		}
-		newData[vet->size] = value;
+		newData[vet->size - 1] = value;
 		vet->data = newData;
         // int* newData = new int[2];
         // newData[0] = vet->data;
@@ -82,9 +79,10 @@ int main()
 {
     string line, cmd;
     int value;
+	bool continua = true;
 
     Vector *v = create(0);
-    while (true)
+    while (continua)
     {
         getline(cin, line);
         stringstream ss(line);
@@ -92,7 +90,7 @@ int main()
         switch (stringToCMD(cmd))
         {
         case End:
-            break;
+            continua = false;
             break;
         case Init:
             ss >> value;
@@ -101,8 +99,9 @@ int main()
                 destroy(v);
             }
             v = create(value);
+			break;
         case Status:
-            cout << "size: " *v->size << " capacity: " *v->capacity << endl;
+            cout << "size: " << v->size << " capacity: " << v->capacity << endl;
             break;
         case Add:
             while (ss >> value)
@@ -114,7 +113,7 @@ int main()
             cout << exibir(v) << endl;
             break;
         default:
-            cout << "Comando invalido";
+            cout << "Comando invalido" << endl;
             break;
         }
     }
