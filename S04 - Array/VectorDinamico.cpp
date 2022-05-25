@@ -12,6 +12,20 @@ struct Vector
     Vector(int c) : size(0), capacity(c), data(nullptr) {}
 };
 
+enum CMD{
+	invalid = -1, End, Init, Status, Add, Show
+};
+
+CMD stringToCMD(string s){
+	if(s == "end"){return End;}
+	if(s == "init"){return Init;}
+	if(s == "status"){return Status;}
+	if(s == "add"){return Add;}
+	if(s == "show"){return Show;}
+
+	return invalid;
+}
+
 string exibir(Vector *vet)
 {
     stringstream ss;
@@ -75,28 +89,28 @@ int main()
         getline(cin, line);
         stringstream ss(line);
         ss >> cmd;
-        switch (cmd)
+        switch (stringToCMD(cmd))
         {
-        case "end":
+        case End:
             break;
             break;
-        case "init":
+        case Init:
             ss >> value;
             if (v != nullptr)
             {
                 destroy(v);
             }
             v = create(value);
-        case "status":
-            cout << "size: " * v->size << " capacity: " * v->capacity << endl;
+        case Status:
+            cout << "size: " *v->size << " capacity: " *v->capacity << endl;
             break;
-        case "add":
+        case Add:
             while (ss >> value)
             {
                 add(v, value);
             }
             break;
-        case "show":
+        case Show:
             cout << exibir(v) << endl;
             break;
         default:
