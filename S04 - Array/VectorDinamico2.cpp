@@ -5,11 +5,47 @@ using namespace std;
 
 struct Vector
 {
-    int size;
-    int capacity;
-    int *data;
+    int size{0};
+    int capacity{0};
+    int *data{nullptr};
 
-    Vector(int c) : size(0), capacity(c), data(nullptr) {}
+    Vector(int c){
+        this->capacity = c;
+        this->data = new int[c];
+    }
+    
+    void operator =(const Vector& other){
+        this->capacity = other.capacity;
+        this->size = other.size;
+        this->data = other.data;
+    }
+    
+    Vector(Vector& other){
+        *this = other;
+    }
+    
+    void add(int value)
+    {
+        if (this != nullptr)
+        {
+            if (this->size + 1 > this->capacity)
+            {
+                this->size++;
+        		auto newData = new int[this->size];
+        		for(int i = 0; i < this->size - 1; i++){
+        			newData[i] = this->data[i];
+        		}
+        		newData[this->size - 1] = value;
+        		this->data = newData;
+            }
+        }
+    }
+    
+    ~Vector(){
+        delete this->data;
+        delete this;
+        this->data = nullptr;
+    }
 };
 
 enum CMD{
@@ -26,49 +62,16 @@ CMD stringToCMD(string s){
 	return invalid;
 }
 
-string exibir(Vector *vet)
+string exibir(Vector vet)
 {
     stringstream ss;
     ss << "[ ";
-    for (int i = 0; i < vet->size; i++)
+    for (int i = 0; i < vet.size; i++)
     {
-        ss << vet->data[i] << ' ';
+        ss << vet.data[i] << ' ';
     }
     ss << "]";
     return ss.str();
-}
-
-Vector *create(int capacity)
-{
-    Vector *v = new Vector(capacity);
-    return v;
-}
-
-void destroy(Vector *vet)
-{
-    delete vet->data;
-    delete vet;
-    vet->data = nullptr;
-    vet = nullptr;
-}
-
-void add(Vector *vet, int value)
-{
-    if (vet != nullptr)
-    {
-        if (vet->size + 1 > vet->capacity)
-        {
-            int newCapacity = 2 * vet->capacity;
-            vet->capacity = newCapacity;
-        }
-        vet->size++;
-		auto newData = new int[vet->size];
-		for(int i = 0; i < vet->size - 1; i++){
-			newData[i] = vet->data[i];
-		}
-		newData[vet->size - 1] = value;
-		vet->data = newData;
-    }
 }
 
 int main()
@@ -77,7 +80,8 @@ int main()
     int value;
 	bool continua = true;
 
-    Vector *v = create(0);
+    Vector v(0);
+    
     while (continua)
     {
         getline(cin, line);
@@ -87,23 +91,18 @@ int main()
         {
         case End:
             continua = false;
-			destroy(v);
             break;
         case Init:
             ss >> value;
-            if (v != nullptr)
-            {
-                destroy(v);
-            }
-            v = create(value);
+            v = Vector(value);
 			break;
         case Status:
-            cout << "size: " << v->size << " capacity: " << v->capacity << endl;
+            cout << "size: " << v.size << " capacity: " << v.capacity << endl;
             break;
         case Add:
             while (ss >> value)
             {
-                add(v, value);
+                v.add(value);
             }
             break;
         case Show:
