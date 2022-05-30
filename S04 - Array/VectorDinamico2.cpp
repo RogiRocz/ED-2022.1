@@ -21,10 +21,11 @@ struct Vector
         this->size = other.size;
         delete[] this->data;
         this->data = new int[other.capacity];
+		
         for (int i = 0; i < other.size; i++)
         {
             this->data[i] = other.data[i];
-        }
+        }	
     }
 
     Vector(Vector &other)
@@ -34,7 +35,7 @@ struct Vector
 
     void add(int value)
     {
-        if (this->size + 1 > this->capacity)
+        if (this->size + 1 <= this->capacity)
         {
             this->size++;
             auto newData = new int[this->size];
