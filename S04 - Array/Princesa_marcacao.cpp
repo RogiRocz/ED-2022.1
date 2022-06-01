@@ -6,6 +6,7 @@ typedef vector<int> vetInt;
 
 void exibirVector(vetInt elems, int pos)
 {
+	cout << "[ ";
     for (int i = 0; i < elems.size(); i++)
     {
         if (i == pos)
@@ -16,7 +17,7 @@ void exibirVector(vetInt elems, int pos)
             }
             else
             {
-                cout << " <" << elems[i] << " ";
+                cout << "<" << elems[i] << " ";
             }
         }
         else
@@ -24,14 +25,13 @@ void exibirVector(vetInt elems, int pos)
             cout << elems[i] << " ";
         }
     }
-    cout << endl;
+	cout << "]" << endl;
 }
 
 void matar(vetInt &elems, int &pos)
 {
     if (elems[pos] > 0)
     {
-		//cout << "Content: " << *(elems.begin() + pos + 5) << endl;
         if (pos + 1 < (int)elems.size())
         {
             elems.erase(elems.begin() + pos + 1);
@@ -39,23 +39,24 @@ void matar(vetInt &elems, int &pos)
         else
         {
             elems.erase(elems.begin());
-			pos = -1;
+			pos--;
         }
     }
     else
     {
         if (pos - 1 > 0)
         {
-            elems.erase(elems.begin() + (pos - 1));
+            elems.erase((elems.begin() + pos) - 1);
             pos--;
         }else if(pos - 1 == 0){
 			elems.erase(elems.begin());
-			pos = elems.size() - 1;
+			pos--;
 		}
         else
         {
+			// Quando comecar com um numero negativo e pos == 0
             elems.pop_back();
-            pos = elems.size() - 1;
+            //pos = elems.size() - 1;
         }
     }
 }
@@ -107,6 +108,12 @@ int main()
     cin >> tam >> pos >> fase;
     --pos;
 
+	if(fase > 0){
+		fase = 1;
+	}else if(fase < 0){
+		fase = -1;
+	}
+	
     trocaSinal = fase;
 
     for (int i = 0; i < tam; i++)
