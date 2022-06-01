@@ -70,5 +70,5 @@ int main() {
 	
   sobrarUm(elems, pos);
 
-	return 0;
+return 0;
 }
