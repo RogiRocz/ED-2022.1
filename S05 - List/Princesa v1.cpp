@@ -8,8 +8,9 @@ void exibir(list<int> vet, int pos){
 	for(auto i = vet.begin(); i != vet.end(); i++){
 		if(pos == 0){
 			cout << *i << "> ";
+		}else{
+			cout << *i << ' ';
 		}
-		cout << *i << ' ';
 		pos--;
 	}
 	cout << "]" << endl;
@@ -17,21 +18,28 @@ void exibir(list<int> vet, int pos){
 
 void matar(list<int>& vet, int pos){
 	auto it = vet.begin();
-	advance(it, pos + 1);
+	int walk{0};
+	if(pos + 1 < (int) vet.size()){
+		walk = pos + 1;
+	}
+	advance(it, walk);
 	vet.erase(it);
 }
 
-void passarEspada(list<int>* vet, int* pos){
-	if(*pos + 1 == (int)vet->size()){
-		*pos = 0;
+void passarEspada(list<int>& vet, int& pos){
+	if(pos + 1 >= (int)vet.size()){
+		pos = 0;
 	}else{
-		*pos++;
+		pos++;
 	}
 }
 
-void sobrarUm(list<int> vet, int pos){
-	matar(vet, pos);
-	passarEspada(&vet, &pos);
+void sobrarUm(list<int>& vet, int pos){
+	while(vet.size() != 1){
+		matar(vet, pos);
+		passarEspada(vet, pos);
+		exibir(vet, pos);
+	}
 }
 
 int main(){
@@ -52,7 +60,6 @@ int main(){
 
 	exibir(vet, pos);
 	sobrarUm(vet, pos);
-	exibir(vet, pos);
 	
 	return 0;
 }
