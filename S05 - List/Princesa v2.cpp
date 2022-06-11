@@ -20,25 +20,10 @@ void exibir(list<int> vet, int pos){
 	cout << "]" << endl;
 }
 
-void matar(list<int>& vet, int pos){
-	list<int>::iterator itElem = vet.begin() + pos;
-	if(*itElem > 0){
-		if(pos + 1 >= vet.size()){
-			vet.erase(vet.begin());
-		}else{
-			vet.erase(itElem + 1);
-		}
-	}else{
-		if(pos - 1 < 0){
-			vet.erase(vet.end());
-		}else if(pos - 1 >= 0){
-			vet.erase(itElem - 1);
-		}
-	}
-}
-
 void passarEspada(list<int> vet, int& pos){
-	auto itElem = vet.begin() + pos;
+	auto itElem = vet.begin();
+	advance(itElem, pos);
+	
 	if(*itElem > 0){
 		if(pos + 1 >= vet.size()){
 			pos = 0;
@@ -49,6 +34,29 @@ void passarEspada(list<int> vet, int& pos){
 		if(pos - 1 < 0){
 			pos = vet.size() - 1;
 		}else if(pos - 1 >= 0){
+			pos--;
+		}
+	}
+}
+
+void matar(list<int>& vet, int& pos){
+	auto itElem = vet.begin();
+	advance(itElem, pos);	
+	
+	if(*itElem > 0){
+		if(pos + 1 >= vet.size()){
+			vet.pop_front();
+			pos--;
+		}else{
+			advance(itElem, +1);
+			vet.erase(itElem);
+		}
+	}else{
+		if(pos - 1 < 0){
+			vet.pop_back();
+		}else if(pos - 1 >= 0){
+			advance(itElem, -1);
+			vet.erase(itElem);
 			pos--;
 		}
 	}
