@@ -5,9 +5,27 @@
 
 using namespace std;
 
-Enum cmd{
-	END, SHOW, IN, INIT, TIC, FINISH
-};
+Enum cmd{INVALID = -1, END, SHOW, IN, INIT, TIC, FINISH};
+
+cmd stringToCMD(string s) {
+	if (s == "end") {
+		return END;
+	}
+	if (s == "init") {
+		return INIT;
+	}
+	if (s == "in") {
+		return IN;
+	}
+	if (s == "tic") {
+		return TIC;
+	}
+	if (s == "finish") {
+		return FINISH;
+	}
+
+	return INVALID;
+}
 
 struct Cliente {
 	string id;
@@ -65,12 +83,33 @@ struct Banco {
 int main() {
 	Banco banco(3);
 	string line, cmd;
-	while(true){
+	bool continua = true;
+	while (continua) {
 		getline(cin, line);
 		stringstream ss(line);
 		ss >> cmd;
-		switch(){
-			
+		switch(stringToCMD(cmd){
+		case END:
+			continua = false;
+			break;
+		case INIT:
+			int size;
+			ss >> size;
+			banco = Banco(size);
+			break;
+		case IN:
+			break;
+		case TIC:
+			banco.tic();
+			break;
+		case SHOW:
+			banco.showAll();
+			break;
+		case FINISH:
+			break;
+		default:
+			cout << "Comando nao reconhecido" << endl;
+			break;
 		}
 	}
 
