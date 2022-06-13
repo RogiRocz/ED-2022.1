@@ -20,7 +20,7 @@ cmd stringToCMD(string s) {
 	if (s == "tic") {
 		return TIC;
 	}
-	if(s == "show"){
+	if (s == "show") {
 		return SHOW;
 	}
 	if (s == "finish") {
@@ -43,7 +43,7 @@ struct Cliente {
 
 	string str() {
 		stringstream ss;
-		ss << id << ":" << docs << ":" << pac << endl;
+		ss << id << ":" << docs << ":" << pac;
 		return ss.str();
 	}
 };
@@ -58,7 +58,7 @@ struct Banco {
 
 	Banco(int numCaixas) {
 		this->caixas.reserve(numCaixas);
-		for (int i = 0; i < this->caixas.capacity(); i++) {
+		for (int i = 0; i < (int)this->caixas.capacity(); i++) {
 			this->caixas[i] == nullptr;
 		}
 	}
@@ -80,16 +80,19 @@ struct Banco {
 	void tic() {
 		this->filaSaida.clear();
 
-		for (auto &cliente : this->caixas) {
-			if (cliente != nullptr) {
-				if (cliente->docs != 0) {
-					cliente->docs--;
+		for (int i = 0; i < (int)this->caixas.capacity(); i++) {
+			auto cliente = &(this->caixas[i]);
+			
+			if (*(cliente) != nullptr) {
+				if ((*cliente)->docs != 0) {
+					(*cliente)->docs--;
 				} else {
-					this->filaSaida.push_back(cliente);
+					this->filaSaida.push_back((*cliente));
 				}
 			} else {
 				if (!this->filaEntrada.empty()) {
-					cliente = filaEntrada.front();
+					(*cliente) = filaEntrada.front();
+					this->filaEntrada.pop_front();
 				}
 			}
 		}
@@ -104,16 +107,24 @@ struct Banco {
 	}
 
 	void showAll() {
-		for (auto cliente : caixas) {
+		for (int i = 0; i < (int)this->caixas.capacity(); i++) {
+			auto cliente = this->caixas[i];
 			cout << "[" << (cliente == nullptr ? "" : cliente->str()) << "]";
 		}
-		cout << "\nin :{ ";
-		for (auto cliente : filaEntrada)
+
+		cout << endl;
+
+		cout << "in :{ ";
+		for (auto cliente : filaEntrada) {
 			cout << cliente->str() << " ";
-		cout << "}\nout:{ ";
-		for (auto cliente : filaSaida)
+		}
+		cout << "}" << endl;
+
+		cout << "out:{ ";
+		for (auto cliente : filaSaida) {
 			cout << cliente->str() << " ";
-		cout << "}\n";
+		}
+		cout << "}" << endl;
 	}
 };
 
