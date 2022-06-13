@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Enum cmd{INVALID = -1, END, SHOW, IN, INIT, TIC, FINISH};
+enum cmd { INVALID = -1, END, INIT, IN, TIC, SHOW, FINISH };
 
 cmd stringToCMD(string s) {
 	if (s == "end") {
@@ -20,6 +20,9 @@ cmd stringToCMD(string s) {
 	if (s == "tic") {
 		return TIC;
 	}
+	if(s == "show"){
+		return SHOW;
+	}
 	if (s == "finish") {
 		return FINISH;
 	}
@@ -32,8 +35,8 @@ struct Cliente {
 	int docs;
 	int pac;
 
-	Cliente(string name, int d, int p) {
-		this->id = name;
+	Cliente(string id, int d, int p) {
+		this->id = id;
 		this->docs = d;
 		this->pac = p;
 	}
@@ -54,16 +57,50 @@ struct Banco {
 	int tics{0};
 
 	Banco(int numCaixas) {
-		this->caixas = numCaixas;
+		this->caixas.reserve(numCaixas);
+		for (int i = 0; i < this->caixas.capacity(); i++) {
+			this->caixas[i] == nullptr;
+		}
 	}
 
 	void insert(Cliente *c) {
+		this->filaEntrada.push_back(c);
 	}
 
-	bool empyt() {
+	bool empty() {
+		for (int i = 0; i < this->caixas.capacity(); i++) {
+			if (this->caixas[i] != nullptr) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	void tic() {
+		this->filaSaida.clear();
+
+		for (auto &cliente : this->caixas) {
+			if (cliente != nullptr) {
+				if (cliente->docs != 0) {
+					cliente->docs--;
+				} else {
+					this->filaSaida.push_back(cliente);
+				}
+			} else {
+				if (!this->filaEntrada.empty()) {
+					cliente = filaEntrada.front();
+				}
+			}
+		}
+
+		for (auto &cliente : this->filaEntrada) {
+			if (cliente->pac > 0) {
+				cliente->pac--;
+			} else {
+				this->filaSaida.push_back(cliente);
+			}
+		}
 	}
 
 	void showAll() {
@@ -88,17 +125,21 @@ int main() {
 		getline(cin, line);
 		stringstream ss(line);
 		ss >> cmd;
-		switch(stringToCMD(cmd){
+		switch (stringToCMD(cmd)) {
 		case END:
 			continua = false;
 			break;
-		case INIT:
+		case INIT: {
 			int size;
 			ss >> size;
 			banco = Banco(size);
-			break;
-		case IN:
-			break;
+		} break;
+		case IN: {
+			string id;
+			int docs, pac;
+			ss >> id >> docs >> pac;
+			banco.insert(new Cliente(id, docs, pac));
+		} break;
 		case TIC:
 			banco.tic();
 			break;
@@ -106,6 +147,12 @@ int main() {
 			banco.showAll();
 			break;
 		case FINISH:
+			while (!banco.empty()) {
+				banco.tic();
+				cout << "Processados: " << banco.docsProcessados << endl;
+				cout << "Perdidos: " << banco.docsPerdidos - 1 << endl;
+				cout << "tics: " << banco.tics << endl;
+			}
 			break;
 		default:
 			cout << "Comando nao reconhecido" << endl;
