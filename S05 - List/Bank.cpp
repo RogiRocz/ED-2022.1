@@ -82,8 +82,18 @@ struct Banco {
 
 		for (int i = 0; i < (int)this->caixas.capacity(); i++) {
 			auto cliente = &(this->caixas[i]);
-			
-			if (*(cliente) != nullptr) {
+			if(cliente != nullptr){
+				if((*cliente)->pac == 0){
+					auto it = this->caixas.begin() + i;
+					this->caixas.erase(it);
+				}
+			}
+		}
+
+		for (int i = 0; i < (int)this->caixas.capacity(); i++) {
+			auto cliente = &(this->caixas[i]);
+
+			if (cliente != nullptr) {
 				if ((*cliente)->docs != 0) {
 					(*cliente)->docs--;
 				} else {
@@ -101,7 +111,7 @@ struct Banco {
 			if (cliente->pac > 0) {
 				cliente->pac--;
 			} else {
-				this->filaSaida.push_back(cliente);
+				this->filaSaida.remove(cliente);
 			}
 		}
 	}
