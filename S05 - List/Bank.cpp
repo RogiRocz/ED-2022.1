@@ -82,22 +82,12 @@ struct Banco {
 
 		for (int i = 0; i < (int)this->caixas.capacity(); i++) {
 			auto cliente = &(this->caixas[i]);
-			if(cliente != nullptr){
-				if((*cliente)->pac == 0){
-					auto it = this->caixas.begin() + i;
-					this->caixas.erase(it);
-				}
-			}
-		}
 
-		for (int i = 0; i < (int)this->caixas.capacity(); i++) {
-			auto cliente = &(this->caixas[i]);
-
-			if (cliente != nullptr) {
+			if (*cliente != nullptr) {
 				if ((*cliente)->docs != 0) {
 					(*cliente)->docs--;
 				} else {
-					this->filaSaida.push_back((*cliente));
+					this->filaSaida.push_back(*cliente);
 				}
 			} else {
 				if (!this->filaEntrada.empty()) {
@@ -107,11 +97,25 @@ struct Banco {
 			}
 		}
 
-		for (auto &cliente : this->filaEntrada) {
-			if (cliente->pac > 0) {
-				cliente->pac--;
+		for(int i = 0; i < (int)this->filaEntrada.size(); i++){
+			auto cliente = this->filaEntrada.begin();
+			advance(cliente, i);
+			if ((*cliente)->pac > 0) {
+				(*cliente)->pac--;
 			} else {
-				this->filaSaida.remove(cliente);
+				this->filaSaida.push_back((*cliente));
+				this->filaEntrada.remove((*cliente));
+			}
+		}
+
+		for (int i = 0; i < (int)this->caixas.capacity(); i++) {
+			auto cliente = &(this->caixas[i]);
+			if(*cliente != nullptr){
+				//cout << "Cliente: " << cliente->str() << " docs: " << cliente->docs << " size: " << i << endl;
+				if((*cliente)->docs == 0){
+					this->filaSaida.push_back(*cliente);
+					*cliente == nullptr;
+				}
 			}
 		}
 	}
