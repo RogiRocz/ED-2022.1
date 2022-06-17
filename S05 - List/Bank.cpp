@@ -78,43 +78,56 @@ struct Banco {
 	}
 
 	void tic() {
+		this->tics++;
 		this->filaSaida.clear();
 
+		// Gerencia caixa
 		for (int i = 0; i < (int)this->caixas.capacity(); i++) {
 			auto cliente = &(this->caixas[i]);
 
 			if (*cliente != nullptr) {
-				if ((*cliente)->docs != 0) {
+				if ((*cliente)->docs > 0) {
 					(*cliente)->docs--;
+					this->docsProcessados++;
 				} else {
 					this->filaSaida.push_back(*cliente);
+					//this->caixas[i] == nullptr;
 				}
 			} else {
 				if (!this->filaEntrada.empty()) {
-					(*cliente) = filaEntrada.front();
-					this->filaEntrada.pop_front();
+					for(int i = 0; i < (int)filaEntrada.size(); i++){
+						auto clienteEntrada = filaEntrada.begin();
+						advance(clienteEntrada, i);
+						if ((*clienteEntrada)->pac > 0) {
+							(*cliente) = *clienteEntrada;
+							this->filaEntrada.remove(*clienteEntrada);
+							break;
+						}						
+					}					
 				}
 			}
 		}
 
-		for(int i = 0; i < (int)this->filaEntrada.size(); i++){
+		// Gerencia fila de entrada
+		for (int i = 0; i < (int)this->filaEntrada.size(); i++) {
 			auto cliente = this->filaEntrada.begin();
 			advance(cliente, i);
 			if ((*cliente)->pac > 0) {
 				(*cliente)->pac--;
 			} else {
 				this->filaSaida.push_back((*cliente));
+				this->docsPerdidos += (*cliente)->docs;
 				this->filaEntrada.remove((*cliente));
 			}
 		}
-
+		
+		// Gerencia saida dos caixas
 		for (int i = 0; i < (int)this->caixas.capacity(); i++) {
 			auto cliente = &(this->caixas[i]);
-			if(*cliente != nullptr){
-				//cout << "Cliente: " << cliente->str() << " docs: " << cliente->docs << " size: " << i << endl;
-				if((*cliente)->docs == 0){
+			if (*cliente != nullptr) {
+				if ((*cliente)->docs == 0) {
 					this->filaSaida.push_back(*cliente);
-					*cliente == nullptr;
+					this->caixas[i] = nullptr;
 				}
 			}
 		}
@@ -174,10 +187,10 @@ int main() {
 		case FINISH:
 			while (!banco.empty()) {
 				banco.tic();
-				cout << "Processados: " << banco.docsProcessados << endl;
-				cout << "Perdidos: " << banco.docsPerdidos - 1 << endl;
-				cout << "tics: " << banco.tics << endl;
 			}
+			cout << "Processados: " << banco.docsProcessados << endl;
+			cout << "Perdidos: " << banco.docsPerdidos - 1 << endl;
+			cout << "tics: " << banco.tics << endl;
 			break;
 		default:
 			cout << "Comando nao reconhecido" << endl;
