@@ -79,6 +79,8 @@ string formatar(string line) {
 			}
 		}
 		cout << saida << endl;
+		cout << pos_cursor(saida, cursor) - 1 << endl;
+		cout << endl;
 	}
 	cout << endl;
 	inserir_palavra(saida, cursor, '|');
