@@ -28,14 +28,34 @@ string formatar(string line) {
 		return (cursor + 1) != end(saida);
 	};
 
+	auto pos_cursor = [](string saida, string::iterator cursor) {
+		int i = 0;
+		for (auto it = saida.begin(); it != saida.end(); it++) {
+			if (*it == *cursor)
+				break;
+			i++;
+		}
+		return i;
+	};
+
+	auto inserir_palavra = [&](string& saida, string::iterator cursor, char c) {
+		int j = pos_cursor(saida, cursor);
+		string resto = saida.substr(j);
+		saida.resize(j + 1);
+		saida[j] = c;
+		saida += resto;
+	};
+
 	for (int i = 0; i <= (int)line.size(); i++) {
 		auto letter = line[i];
 		if (caracteresAceitos(letter)) {
-			saida += letter;
+			inserir_palavra(saida, cursor, letter);
+			cursor++;
 		}
 		if (letter == 'R') {
 			letter = '\n';
-			saida += letter;
+			inserir_palavra(saida, cursor, letter);
+			cursor++;
 		}
 		if (letter == 'B') {
 			if (mover_cursor_esquerda(saida, cursor)) {
@@ -48,23 +68,20 @@ string formatar(string line) {
 				i++;
 			}
 		}
-		// if (letter == '<') {
-		// 	if (mover_cursor_esquerda(saida, cursor)) {
-		// 		cursor = line.erase(cursor);
-		// 		cursor--;
-		// 	}
-		// 	saida += letter;
-		// }
-		// if (letter == '>') {
-		// 	if (mover_cursor_direita(saida, cursor)) {
-		// 		cursor = line.erase(cursor);
-		// 		cursor++;
-		// 	}
-		// 	saida += letter;
-		// }
-		cursor++;
+		if (letter == '<') {
+			if (mover_cursor_esquerda(saida, cursor)) {
+				cursor--;
+			}
+		}
+		if (letter == '>') {
+			if (mover_cursor_direita(saida, cursor)) {
+				cursor++;
+			}
+		}
+		cout << saida << endl;
 	}
-	saida += '|';
+	cout << endl;
+	inserir_palavra(saida, cursor, '|');
 	return saida;
 }
 
@@ -78,7 +95,7 @@ void teste(string line) {
 }
 
 int main() {
-	string line = "euRamDo";
+	string line = "euRamo<<<<<<<como-";
 	// cin >> line;
 	// teste(line);
 	string saida = formatar(line);
