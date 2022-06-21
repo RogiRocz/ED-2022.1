@@ -1,45 +1,32 @@
 #include <iostream>
+#include <iterator>
 #include <list>
 
 using namespace std;
-
-void cadaCaracter(string line) {
-	for (int i = 0; i <= (int)line.size(); i++) {
-		cout << "'" << line[i] << "'" << endl;
-	}
-}
-
-bool caracteresAceitos(char c) {
-	if ((c >= 'a' && c <= 'z') || c == '-') {
-		return true;
-	}
-	return false;
-}
 
 string formatar(string line) {
 	string saida;
 	auto cursor = saida.begin();
 
-	auto mover_cursor_esquerda = [](string saida, string::iterator cursor) {
-		return (cursor - 1) != begin(saida);
-	};
-
-	auto mover_cursor_direita = [](string saida, string::iterator cursor) {
-		return (cursor + 1) != end(saida);
-	};
-
-	auto pos_cursor = [](string saida, string::iterator cursor) {
-		int i = 0;
-		for (auto it = saida.begin(); it != saida.end(); it++) {
-			if (*it == *cursor)
-				break;
-			i++;
+	auto caracteresAceitos = [](char c) {
+		if ((c >= 'a' && c <= 'z') || c == '-') {
+			return true;
 		}
-		return i;
+		return false;
 	};
 
-	auto inserir_palavra = [&](string& saida, string::iterator cursor, char c) {
-		int j = pos_cursor(saida, cursor);
+	auto mover_cursor_esquerda = [](string saida, int pos_cursor) {
+		return pos_cursor - 1 >= 0;
+	};
+
+	auto mover_cursor_direita = [](string saida, int pos_cursor) {
+		return pos_cursor + 1 <= saida.size();
+	};
+
+	auto pos_cursor = [&]() { return distance(saida.begin(), cursor); };
+
+	auto inserir_palavra = [&](string &saida, string::iterator cursor, char c) {
+		int j = pos_cursor();
 		string resto = saida.substr(j);
 		saida.resize(j + 1);
 		saida[j] = c;
@@ -50,59 +37,43 @@ string formatar(string line) {
 		auto letter = line[i];
 		if (caracteresAceitos(letter)) {
 			inserir_palavra(saida, cursor, letter);
-			cursor++;
+			advance(cursor, +1);
 		}
 		if (letter == 'R') {
 			letter = '\n';
 			inserir_palavra(saida, cursor, letter);
-			cursor++;
+			advance(cursor, +1);
 		}
 		if (letter == 'B') {
-			if (mover_cursor_esquerda(saida, cursor)) {
-				cursor--;
+			if (mover_cursor_esquerda(saida, pos_cursor())) {
+				advance(cursor, -1);
 				cursor = saida.erase(cursor);
 			}
 		}
 		if (letter == 'D') {
-			if (mover_cursor_direita(saida, cursor)) {
-				i++;
+			if (mover_cursor_direita(saida, pos_cursor())) {
+				cursor = saida.erase(cursor);
 			}
 		}
 		if (letter == '<') {
-			if (mover_cursor_esquerda(saida, cursor)) {
-				cursor--;
+			if (mover_cursor_esquerda(saida, pos_cursor())) {
+				advance(cursor, -1);
 			}
 		}
 		if (letter == '>') {
-			if (mover_cursor_direita(saida, cursor)) {
-				cursor++;
+			if (mover_cursor_direita(saida, pos_cursor())) {
+				advance(cursor, +1);
 			}
 		}
-		cout << saida << endl;
-		cout << pos_cursor(saida, cursor) - 1 << endl;
-		cout << endl;
 	}
-	cout << endl;
 	inserir_palavra(saida, cursor, '|');
 	return saida;
 }
 
-void teste(string line) {
-	string t;
-	t += 'A';
-	t += 'M';
-	t += 'O';
-	t += 'R';
-	cout << t << endl;
-}
-
 int main() {
-	string line = "euRamo<<<<<<<como-";
-	// cin >> line;
-	// teste(line);
-	string saida = formatar(line);
-	// cadaCaracter(line);
-	cout << saida << endl;
+	string line;
+	cin >> line;
+	cout << formatar(line) << endl;
 
 	return 0;
 }
