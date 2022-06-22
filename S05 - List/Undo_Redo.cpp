@@ -4,18 +4,6 @@
 
 using namespace std;
 
-void mostrar(list<pair<string, int>> undo, list<pair<string, int>> redo) {
-	for (auto elem : undo) {
-		cout << "saida: " << elem.first << " cursor: " << elem.second << endl;
-	}
-
-	for (auto elem : redo) {
-		cout << "saida: " << elem.first << " cursor: " << elem.second << endl;
-	}
-
-	cout << endl;
-}
-
 bool caracteresAceitos(char c) {
 	if ((c >= 'a' && c <= 'z') || c == '-') {
 		return true;
@@ -49,20 +37,25 @@ string formatar(string line) {
 		saida += resto;
 	};
 
+	cursorUndo = pos_cursor();
+	undo.push_back(make_pair(saida, cursorUndo));
+
 	for (int i = 0; i <= (int)line.size(); i++) {
 		auto letter = line[i];
 		if (caracteresAceitos(letter)) {
-			cursorUndo = pos_cursor();
-			undo.push_back(make_pair(saida, cursorUndo));
 			inserir_palavra(saida, cursor, letter);
 			advance(cursor, +1);
-		}
-		if (letter == 'R') {
 			cursorUndo = pos_cursor();
 			undo.push_back(make_pair(saida, cursorUndo));
+			redo.clear();
+		}
+		if (letter == 'R') {
 			letter = '\n';
 			inserir_palavra(saida, cursor, letter);
 			advance(cursor, +1);
+			cursorUndo = pos_cursor();
+			undo.push_back(make_pair(saida, cursorUndo));
+			redo.clear();
 		}
 		if (letter == 'B') {
 			cursorUndo = pos_cursor();
@@ -90,39 +83,34 @@ string formatar(string line) {
 			}
 		}
 		if (letter == 'Z') {
-			string saidaAux = saida;
-			auto cursorAux = pos_cursor();
-			saida = undo.back().first;
-			advance(cursor, undo.back().second);
-			// cursorRedo = cursorAux;
-			redo.push_back(make_pair(saidaAux, cursorAux));
+			if ((int)undo.size() != 1) {
+				string saidaAux = saida;
+				int cursorAux = pos_cursor();
+				undo.pop_back();
+				saida = undo.back().first;
+				advance(cursor, -1 * pos_cursor());
+				advance(cursor, undo.back().second);
+				redo.push_back(make_pair(saidaAux, cursorAux));
+			}
 		}
 		if (letter == 'Y') {
-			saida = redo.back().first;
-			advance(cursor, redo.back().second);
-			undo.back().first = saida;
-			undo.back().second = pos_cursor();
-			redo.clear();
+			if ((int)redo.size() != 0) {
+				saida = redo.back().first;
+				advance(cursor, -1 * pos_cursor());
+				advance(cursor, redo.back().second);
+				undo.push_back(make_pair(saida, pos_cursor()));
+				redo.pop_back();
+			}
 		}
-		mostrar(undo, redo);
 	}
 	inserir_palavra(saida, cursor, '|');
 	return saida;
 }
 
-list<string> teste(string line);
-
-void exibir(list<string> t) {
-	for (auto elem : t) {
-		cout << elem << endl;
-	}
-}
-
 int main() {
-	string line = "abcZZd";
-	// cin >> line;
+	string line;
+	cin >> line;
 	cout << formatar(line) << endl;
-	// teste(line);
-
+	
 	return 0;
 }
