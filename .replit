@@ -1,3 +1,3 @@
 language = "cpp"
-compile = "g++ -o 'S05 - List'/'Undo_Redo'.exe 'S05 - List'/'Undo_Redo'.cpp"
-run = "cd 'S05 - List'/ && ./'Undo_Redo'.exe"
+compile = "g++ -o 'S06 - Stack'/'Burn'.exe 'S06 - Stack'/'Burn'.cpp"
+run = "cd 'S06 - Stack'/ && ./'Burn'.exe"
