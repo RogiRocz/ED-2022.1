@@ -1,29 +1,101 @@
+#include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stack>
 #include <vector>
-#include <fstream>
 
 using namespace std;
 
-struct Ponto{
+struct Ponto {
 	int l, c;
-	//Ponto(int l, int c)l(l), c(c){}
+	Ponto(int l, int c) : l(l), c(c) {
+	}
 };
 
-int main(){
-	fstream file("dadosBurn.txt", fstream::in);
-	if(file.is_open()){
+void exibir(vector<string> map) {
+	for (auto linha : map) {
+		cout << linha << endl;
+	}
+}
+
+vector<string> produzirMapa(int numL, int numC, fstream *file) {
+	vector<string> result(numL, "");
+	for (int i = 0; i < numL; i++) {
 		string line;
-		int l, c;
-		Ponto pontoInicial;
-		
-		getline(file, line);
-		line >> l >> c;
-		
-		
-		
+		getline(*file, line);
+		stringstream ss(line);
+		for (int j = 0; j < numC; j++) {
+			string terreno;
+			ss >> terreno;
+			result[i].push_back(*(terreno.begin() + j));
+		}
+	}
+	return result;
+}
+
+vector<Ponto> pegarVizinhos(Ponto p) {
+	return {{p.l, p.c - 1}, {p.l - 1, p.c}, {p.l, p.c + 1}, {p.l + 1, p.c}};
+}
+
+bool dentro(vector<string> map, Ponto p) {
+	int limiteL = map.size(), limiteC = map[0].size();
+	if ((p.l < 0 || p.l >= limiteL) || (p.c < 0 || p.c >= limiteC)) {
+		return false;
 	}
 
+	return true;
+}
+
+bool ehArvore(vector<string> map, Ponto p) {
+	return map[p.l][p.c] == '#';
+}
+
+void queimar(vector<string> &map, Ponto p) {
+	stack<Ponto> incendiaveis;
+	bool temVizinhos = true;
+	auto aux = p;
+
+	incendiaveis.push(p);
+	while (temVizinhos) {
+		for (auto viz : pegarVizinhos(aux)) {
+			if (dentro(map, viz) && ehArvore(map, viz)) {
+				incendiaveis.push(viz);
+				aux = viz;
+				// Isso tras o problema de fica indo e voltando pro mesmo ponto
+			}
+		}
+		temVizinhos = false;
+	}
+
+	auto fogo = [&map](Ponto *q) { map[q->l][q->c] = 'o'; };
+
+	cout << incendiaveis.size() << endl;
+
+	for (size_t i = 0; i < incendiaveis.size(); i++) {
+		fogo(&incendiaveis.top());
+		incendiaveis.pop();
+	}
+}
+
+int main() {
+	fstream file("dadosBurn.txt", fstream::in);
+	if (file.is_open()) {
+		string line;
+		int numL, numC;
+		int l, c;
+
+		getline(file, line);
+		stringstream ss(line);
+		ss >> numL >> numC;
+		ss >> l >> c;
+		Ponto pontoInicial(l, c);
+
+		vector<string> map = produzirMapa(numL, numC, &file);
+
+		queimar(map, pontoInicial);
+
+		exibir(map);
+	}
 
 	file.close();
 	return 0;
