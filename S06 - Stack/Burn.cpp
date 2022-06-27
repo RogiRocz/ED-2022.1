@@ -50,31 +50,40 @@ bool ehArvore(vector<string> map, Ponto p) {
 	return map[p.l][p.c] == '#';
 }
 
+void possiveisIncediaveis(
+	vector<string> &map,
+	Ponto p,
+	stack<Ponto> &incendiaveis) {
+	for (auto viz : pegarVizinhos(p)) {
+		if (dentro(map, viz) && ehArvore(map, viz)) {
+			incendiaveis.push(viz);
+			map[viz.l][viz.c] = '*';
+			possiveisIncediaveis(map, viz, incendiaveis);
+		}
+	}
+}
+
 void queimar(vector<string> &map, Ponto p) {
 	stack<Ponto> incendiaveis;
 	bool temVizinhos = true;
 	auto aux = p;
 
 	incendiaveis.push(p);
-	while (temVizinhos) {
-		for (auto viz : pegarVizinhos(aux)) {
-			if (dentro(map, viz) && ehArvore(map, viz)) {
-				incendiaveis.push(viz);
-				aux = viz;
-				// Isso tras o problema de fica indo e voltando pro mesmo ponto
-			}
-		}
-		temVizinhos = false;
-	}
+	map[p.l][p.c] = '*';
+
+	possiveisIncediaveis(map, p, incendiaveis);
 
 	auto fogo = [&map](Ponto *q) { map[q->l][q->c] = 'o'; };
 
-	cout << incendiaveis.size() << endl;
-
 	for (size_t i = 0; i < incendiaveis.size(); i++) {
-		fogo(&incendiaveis.top());
+		cout << incendiaveis.size() << endl;
+		exibir(map);
+		auto ponto = incendiaveis.top();
+		map[ponto.l][ponto.c] = 'o';
 		incendiaveis.pop();
 	}
+
+	
 }
 
 int main() {
