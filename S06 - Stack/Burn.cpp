@@ -73,17 +73,12 @@ void queimar(vector<string> &map, Ponto p) {
 
 	possiveisIncediaveis(map, p, incendiaveis);
 
-	auto fogo = [&map](Ponto *q) { map[q->l][q->c] = 'o'; };
+	auto fogo = [&map](Ponto q) { map[q.l][q.c] = 'o'; };
 
-	for (size_t i = 0; i < incendiaveis.size(); i++) {
-		cout << incendiaveis.size() << endl;
-		exibir(map);
-		auto ponto = incendiaveis.top();
-		map[ponto.l][ponto.c] = 'o';
+	while (!incendiaveis.empty()) {
+		fogo(incendiaveis.top());
 		incendiaveis.pop();
 	}
-
-	
 }
 
 int main() {
