@@ -1,3 +1,3 @@
 language = "cpp"
-compile = "g++ -o 'S07 - Tree'/'Tree Load'.exe 'S07 - Tree'/'Tree Load'.cpp"
-run = "cd 'S07 - Tree'/ && ./'Tree Load'.exe"
+compile = "g++ -o 'S06 - Stack'/'Labirinto'.exe 'S06 - Stack'/'Labirinto'.cpp"
+run = "cd 'S06 - Stack'/ && ./'Labirinto'.exe"
