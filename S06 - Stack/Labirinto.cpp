@@ -49,10 +49,12 @@ bool acharCaminho(vector<string> &mapa, stack<Ponto> &caminho, Ponto pInicial, P
 	for(auto viz : getVizinhos(pInicial)){
 		if(acharCaminho(mapa, caminho, viz, pFinal)){
 			caminho.push(viz);
-			mapa[viz.l][viz.c] = ' ';
 			return true;
 		}
 	}
+
+	mapa[row][col] = ' ';
+	return false;
 }
 
 int main() {
@@ -94,7 +96,6 @@ int main() {
 
 			l++;
 		}
-		
 		acharCaminho(mapa, caminho, pInicial, pFinal);
 		caminho.push(pInicial);
 
