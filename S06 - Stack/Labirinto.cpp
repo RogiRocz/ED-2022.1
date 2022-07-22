@@ -15,18 +15,43 @@ struct Ponto {
 
 	Ponto() {
 	}
+
+	string to_string(){
+		stringstream ss;
+		ss << "Ponto l: " << l << " c: " << c;
+		return ss.str();
+	}
 };
 
 vector<Ponto> getVizinhos(Ponto p) {
-	return {{p.c - 1, p.l}, {p.c, p.l - 1}, {p.c + 1, p.l}, {p.c, p.l + 1}};
+	return {{p.l, p.c - 1}, {p.l - 1, p.c}, {p.l, p.c + 1}, {p.l + 1, p.c}};
 }
 
-void exibir(vector<vector<string>> mapa) {
+void exibir(vector<string> mapa) {
 	for (auto row : mapa) {
 		for (auto col : row) {
 			cout << col;
 		}
 		cout << endl;
+	}
+}
+
+bool acharCaminho(vector<string> &mapa, stack<Ponto> &caminho, Ponto pInicial, Ponto pFinal){
+	int row = pInicial.l;
+	int col = pInicial.c;
+
+	if(mapa[row][col] != ' '){return false;}
+
+	if(row == pFinal.l && col == pFinal.c){return true;}
+
+	mapa[row][col] = '*';
+	
+	for(auto viz : getVizinhos(pInicial)){
+		if(acharCaminho(mapa, caminho, viz, pFinal)){
+			caminho.push(viz);
+			mapa[viz.l][viz.c] = ' ';
+			return true;
+		}
 	}
 }
 
@@ -39,10 +64,9 @@ int main() {
 		stringstream ss(line);
 		ss >> numL >> numC;
 
-		vector<vector<string>> mapa(numL);
+		vector<string> mapa(numL);
 		stack<Ponto> caminho;
 
-		auto itMapa = mapa.begin();
 		int l = 0, c = 0;
 		Ponto pInicial;
 		Ponto pFinal;
@@ -66,21 +90,18 @@ int main() {
 			};
 
 			mudandoPontos(line);
-			itMapa->push_back(line);
-			itMapa++;
+			mapa[l] = line;
 
 			l++;
 		}
+		
+		acharCaminho(mapa, caminho, pInicial, pFinal);
 		caminho.push(pInicial);
-		// acharCaminho(mapa, caminho, pInicial, pFinal);
-		caminho.push(pFinal);
 
 		while(!caminho.empty()){
-			int lQueimar, cQueimar;
-			lQueimar =  caminho.top().l;
-			cQueimar = caminho.top().c;
-			auto row = mapa[lQueimar];
-			row[cQueimar] = '.';
+			auto lQueimar = caminho.top().l;
+			auto cQueimar = caminho.top().c;
+			mapa[lQueimar][cQueimar] = '.';
 			caminho.pop();
 		}
 		exibir(mapa);
